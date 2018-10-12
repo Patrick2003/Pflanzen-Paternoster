@@ -1,0 +1,23 @@
+{
+  "name": "pflanzen-paternoster",
+  "version": "1.0.0",
+  "description": "Auf der BUGA 2019 wird es neben dem Farmbot auch einen \"Pflanzen Paternoster\" geben, der Kräuter und Topfpflanzen selbständig pflegt.",
+  "main": "main.js",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Patrick2003/Pflanzen-Paternoster.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Patrick2003/Pflanzen-Paternoster/issues"
+  },
+  "homepage": "https://github.com/Patrick2003/Pflanzen-Paternoster#readme"
+}

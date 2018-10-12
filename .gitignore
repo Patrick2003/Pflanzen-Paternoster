@@ -1,2 +1,4 @@
 # configfiles
 config.h
+node_modules
+package-lock.json
