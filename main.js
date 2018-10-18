@@ -5,7 +5,7 @@ const ctx = paternoster.getContext("2d");
 const scalefactor = 0.5;
 const canvas = {
     xpos: 100,
-    ypos: 100,
+    ypos: 325,
     height: 500,
     width: 400,
     pot: {
@@ -30,6 +30,9 @@ const scale = (obj) => {
 }
 
 scale(canvas);
+
+paternoster.height = canvas.height + 2 * canvas.ypos;
+paternoster.width = canvas.width + 2 * canvas.xpos;
 
 const length = {
     vertical: canvas.height,
@@ -64,7 +67,7 @@ const pots = {
         humidity: 45
     },
     5: {
-        name: "Libstoeckel",
+        name: "Libstöckel",
         humidity: 35
     },
     6: {
@@ -211,7 +214,7 @@ const storeLastPos = (pot, pos) => {
 const drawPot = (point) => {
     const pot = canvas.pot;
 
-    if (pots[currentPot].selcted === true) {
+    if (pots[currentPot].selected === true) {
         ctx.strokeStyle = "red";
     } else {
         ctx.strokeStyle = "black";
@@ -291,10 +294,10 @@ const checkMouse = (mouse) => {
     for (let key in pots) {
         const pos = pots[key].lastPos;
         if (mouse.x < pos.xmax && mouse.x > pos.xmin && mouse.y < pos.ymax && mouse.y > pos.ymin) {
-            info.span = pots[key].name;
-            pots[key].selcted = true;
+            info.innerText = pots[key].name;
+            pots[key].selected = true;
         } else {
-            pots[key].selcted = false;
+            pots[key].selected = false;
         }
     }
 }
