@@ -1,4 +1,5 @@
 const paternoster = document.getElementById("paternoster");
+const info = document.getElementById("selected");
 const ctx = paternoster.getContext("2d");
 
 const scalefactor = 0.5;
@@ -200,13 +201,23 @@ const draw = (pos) => {
 
 }
 
+const storeLastPos = (pot, pos) => {
+    if (pots.hasOwnProperty(pot)) {
+        pots[pot].lastPos = pos;
+    }
+}
 
 // draw tracking rect at xy
 const drawPot = (point) => {
     const pot = canvas.pot;
 
+    if (pots[currentPot].selcted === true) {
+        ctx.strokeStyle = "red";
+    } else {
+        ctx.strokeStyle = "black";
+    }
+
     ctx.fillStyle = "brown";
-    ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(point.x - pot.width.top, point.y - pot.height);
@@ -233,6 +244,13 @@ const drawPot = (point) => {
     ctx.fillText(font.text, font.x, font.y);
 
     ctx.stroke();
+
+    storeLastPos(currentPot, {
+        xmin: point.x - pot.width.top,
+        ymin: point.y - pot.height,
+        xmax: point.x + pot.width.top,
+        ymax: point.y + pot.height
+    })
 }
 
 const getLineXY = (startPt, endPt, permille) => {
@@ -270,21 +288,23 @@ const getSemicircleXY = (startPt, endPt, permille) => {
 }
 
 const checkMouse = (mouse) => {
-    if(mouse.x < 20 && mouse.y < 20) {
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        ctx.font = "15 px Arial";
-        ctx.fillText("Schnittlauch", mouse.x, mouse.y + 15);
-        ctx.stroke();
+    for (let key in pots) {
+        const pos = pots[key].lastPos;
+        if (mouse.x < pos.xmax && mouse.x > pos.xmin && mouse.y < pos.ymax && mouse.y > pos.ymin) {
+            info.span = pots[key].name;
+            pots[key].selcted = true;
+        } else {
+            pots[key].selcted = false;
+        }
     }
 }
 
-paternoster.addEventListener('mousemove', (evt) => {
+paternoster.addEventListener('click', (evt) => {
     checkMouse({
         x: evt.offsetX,
         y: evt.offsetY
-    })    
-}, false);
+    })
+});
 
 // start the animation
 animate();
