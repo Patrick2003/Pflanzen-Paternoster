@@ -1,7 +1,25 @@
 const paternoster = document.getElementById("paternoster");
 const info = document.getElementById("selected");
 const ctx = paternoster.getContext("2d");
+const svgNS = "https://www.w3.org/TR/SVG2/";
 
+function createCircle() {
+    const myCircle = document.createElementNS(svgNS, "circle"); //to create a circle. for rectangle use "rectangle"
+    myCircle.setAttributeNS(null, "id", "mycircle");
+    myCircle.setAttributeNS(null, "cx", 100);
+    myCircle.setAttributeNS(null, "cy", 100);
+    myCircle.setAttributeNS(null, "r", 50);
+    myCircle.setAttributeNS(null, "fill", "black");
+    myCircle.setAttributeNS(null, "stroke", "black");
+    myCircle.setAttributeNS(null, "stroke-width", "3px");
+    console.log("drawing svg");
+    document.getElementById("svgpaternoster").appendChild(myCircle);
+}
+
+createCircle();
+
+console.log(window.screenX);
+ 
 const scalefactor = 0.5;
 const canvas = {
     xpos: 100,
@@ -43,7 +61,7 @@ const length = {
 length.total = 2 * length.horizontal + 2 * length.vertical;
 
 const img = new Image();
-img.src = "https://image.flaticon.com/icons/svg/1087/1087420.svg";
+img.src = "./plant.svg";
 
 const fps = 60;
 let absPos = 0;
@@ -169,36 +187,36 @@ const draw = (pos) => {
             x: canvas.xpos,
             y: canvas.ypos + canvas.height
         }, {
-            x: canvas.xpos,
-            y: canvas.ypos
-        }, relPos);
+                x: canvas.xpos,
+                y: canvas.ypos
+            }, relPos);
     } else if (pos < length.vertical + length.horizontal) {
         relPos = (pos - length.vertical) / length.horizontal
         xy = getSemicircleXY({
             x: canvas.xpos,
             y: canvas.ypos
         }, {
-            x: canvas.xpos + canvas.width,
-            y: canvas.ypos
-        }, relPos);
+                x: canvas.xpos + canvas.width,
+                y: canvas.ypos
+            }, relPos);
     } else if (pos < length.vertical + length.horizontal + length.vertical) {
         relPos = (pos - length.vertical - length.horizontal) / length.vertical
         xy = getLineXY({
             x: canvas.xpos + canvas.width,
             y: canvas.ypos
         }, {
-            x: canvas.xpos + canvas.width,
-            y: canvas.ypos + canvas.height
-        }, relPos);
+                x: canvas.xpos + canvas.width,
+                y: canvas.ypos + canvas.height
+            }, relPos);
     } else {
         relPos = (pos - length.vertical - length.horizontal - length.vertical) / length.horizontal
         xy = getSemicircleXY({
             x: canvas.xpos + canvas.width,
             y: canvas.ypos + canvas.height
         }, {
-            x: canvas.xpos,
-            y: canvas.ypos + canvas.height
-        }, relPos);
+                x: canvas.xpos,
+                y: canvas.ypos + canvas.height
+            }, relPos);
     }
     drawPot(xy);
 
