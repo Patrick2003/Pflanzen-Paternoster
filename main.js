@@ -1,22 +1,6 @@
 const paternoster = document.getElementById("paternoster");
 const info = document.getElementById("selected");
 const ctx = paternoster.getContext("2d");
-const svgNS = "https://www.w3.org/TR/SVG2/";
-
-function createCircle() {
-    const myCircle = document.createElementNS(svgNS, "circle"); //to create a circle. for rectangle use "rectangle"
-    myCircle.setAttributeNS(null, "id", "mycircle");
-    myCircle.setAttributeNS(null, "cx", 100);
-    myCircle.setAttributeNS(null, "cy", 100);
-    myCircle.setAttributeNS(null, "r", 50);
-    myCircle.setAttributeNS(null, "fill", "black");
-    myCircle.setAttributeNS(null, "stroke", "black");
-    myCircle.setAttributeNS(null, "stroke-width", "3px");
-    console.log("drawing svg");
-    document.getElementById("svgpaternoster").appendChild(myCircle);
-}
-
-createCircle();
 
 console.log(window.screenX);
  
@@ -255,7 +239,7 @@ const drawPot = (point) => {
     const font = {
         text: pots[currentPot].humidity,
         color: "white",
-        family: "Courier New",
+        family: "Verdana",
         size: pot.height * 1,
         x: point.x - pot.width.bottom * 0.85,
         y: point.y + pot.height * 0.2
