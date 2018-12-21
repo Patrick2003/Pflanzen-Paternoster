@@ -1,6 +1,5 @@
 body {
     background-color: #555;
     display: flex;
-    flex-wrap: wrap; 
-    vertical-align: center; 
+    flex-wrap: wrap;
 }

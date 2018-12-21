@@ -2,20 +2,29 @@ const paternoster = document.getElementById("paternoster");
 const info = document.getElementById("selected");
 const ctx = paternoster.getContext("2d");
 
-console.log(window.screenX);
- 
-const scalefactor = 0.5;
+let scalefactor = 0;
+
+if (window.innerHeight * 0.8 < window.innerWidth) {
+    scalefactor = 600 / window.innerHeight;
+} else {
+    scalefactor = window.innerWidth / 825;
+}
+
+scalefactor = 0.75;
+
 const canvas = {
-    xpos: 100,
-    ypos: 325,
-    height: 500,
+    xpos: 45,
+    ypos: 256,
+    height: 800,
     width: 400,
     pot: {
         height: 40,
         width: {
             top: 45,
             bottom: 30
-        }
+        },
+        imgSrc: "plant.svg",
+        imgSize: 60
     }
 }
 
@@ -33,19 +42,19 @@ const scale = (obj) => {
 
 scale(canvas);
 
-paternoster.height = canvas.height + 2 * canvas.ypos;
-paternoster.width = canvas.width + 2 * canvas.xpos;
+paternoster.height = canvas.height;
+paternoster.width = canvas.width;
 
 const length = {
-    vertical: canvas.height,
-    horizontal: canvas.width * Math.PI,
+    vertical: canvas.height - canvas.width - 2 * canvas.pot.height,
+    horizontal: (canvas.width - canvas.pot.width.top) * Math.PI * 0.5,
     total: undefined
 }
 
 length.total = 2 * length.horizontal + 2 * length.vertical;
 
 const img = new Image();
-img.src = "./plant.svg";
+img.src = canvas.pot.imgSrc;
 
 const fps = 60;
 let absPos = 0;
@@ -129,7 +138,7 @@ const animate = () => {
 
 const drawBackground = () => {
 
-    const arcx = canvas.xpos + canvas.width / 2;
+    const arcr = canvas.width * 0.5 - canvas.pot.width.top;
 
     ctx.fillStyle = "#666";
     ctx.rect(0, 0, paternoster.width, paternoster.height);
@@ -139,24 +148,24 @@ const drawBackground = () => {
 
     ctx.beginPath();
     ctx.strokeStyle = "black";
-    ctx.moveTo(canvas.xpos, canvas.ypos + canvas.height);
+    ctx.moveTo(canvas.xpos, canvas.ypos + length.vertical);
     ctx.lineTo(canvas.xpos, canvas.ypos);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.strokeStyle = "black";
-    ctx.arc(arcx, canvas.ypos, canvas.width / 2, 1 * Math.PI, 0 * Math.PI, false);
+    ctx.arc(canvas.width * 0.5, canvas.ypos, arcr, 1 * Math.PI, 0 * Math.PI, false);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.strokeStyle = "black";
-    ctx.moveTo(canvas.xpos + canvas.width, canvas.ypos);
-    ctx.lineTo(canvas.xpos + canvas.width, canvas.ypos + canvas.height);
+    ctx.moveTo(canvas.xpos + 2 * arcr, canvas.ypos);
+    ctx.lineTo(canvas.xpos + 2 * arcr, canvas.ypos + length.vertical);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.strokeStyle = "black";
-    ctx.arc(arcx, canvas.ypos + canvas.height, canvas.width / 2, 0 * Math.PI, 1 * Math.PI, false);
+    ctx.arc(canvas.width * 0.5, canvas.ypos + length.vertical, arcr, 0 * Math.PI, 1 * Math.PI, false);
     ctx.stroke();
 }
 
@@ -169,7 +178,7 @@ const draw = (pos) => {
         relPos = pos / length.vertical;
         xy = getLineXY({
             x: canvas.xpos,
-            y: canvas.ypos + canvas.height
+            y: canvas.ypos + length.vertical
         }, {
                 x: canvas.xpos,
                 y: canvas.ypos
@@ -180,26 +189,26 @@ const draw = (pos) => {
             x: canvas.xpos,
             y: canvas.ypos
         }, {
-                x: canvas.xpos + canvas.width,
+                x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
                 y: canvas.ypos
             }, relPos);
     } else if (pos < length.vertical + length.horizontal + length.vertical) {
         relPos = (pos - length.vertical - length.horizontal) / length.vertical
         xy = getLineXY({
-            x: canvas.xpos + canvas.width,
+            x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
             y: canvas.ypos
         }, {
-                x: canvas.xpos + canvas.width,
-                y: canvas.ypos + canvas.height
+                x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
+                y: canvas.ypos + length.vertical
             }, relPos);
     } else {
         relPos = (pos - length.vertical - length.horizontal - length.vertical) / length.horizontal
         xy = getSemicircleXY({
-            x: canvas.xpos + canvas.width,
-            y: canvas.ypos + canvas.height
+            x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
+            y: canvas.ypos + length.vertical
         }, {
                 x: canvas.xpos,
-                y: canvas.ypos + canvas.height
+                y: canvas.ypos + length.vertical
             }, relPos);
     }
     drawPot(xy);
@@ -212,7 +221,7 @@ const storeLastPos = (pot, pos) => {
     }
 }
 
-// draw tracking rect at xy
+// draw pot at xy
 const drawPot = (point) => {
     const pot = canvas.pot;
 
@@ -222,25 +231,46 @@ const drawPot = (point) => {
         ctx.strokeStyle = "black";
     }
 
+    ctx.lineWidth = 3;
+    ctx.lineJoin = "round";
+
+    const points = {
+        topleft: {
+            x: point.x - pot.width.top + ctx.lineWidth / 2,
+            y: point.y - pot.height + ctx.lineWidth / 2
+        },
+        topright: {
+            x: point.x + pot.width.top - ctx.lineWidth / 2,
+            y: point.y - pot.height + ctx.lineWidth / 2
+        },
+        bottomleft: {
+            x: point.x - pot.width.bottom + ctx.lineWidth / 2,
+            y: point.y + pot.height - ctx.lineWidth / 2
+        },
+        bottomright: {
+            x: point.x + pot.width.bottom - ctx.lineWidth / 2,
+            y: point.y + pot.height - ctx.lineWidth / 2
+        }
+    }
+
     ctx.fillStyle = "brown";
-    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(point.x - pot.width.top, point.y - pot.height);
-    ctx.lineTo(point.x + pot.width.top, point.y - pot.height);
-    ctx.lineTo(point.x + pot.width.bottom, point.y + pot.height);
-    ctx.lineTo(point.x - pot.width.bottom, point.y + pot.height);
-    ctx.lineTo(point.x - pot.width.top, point.y - pot.height);
+    ctx.moveTo(points.topleft.x, points.topleft.y);
+    ctx.lineTo(points.topright.x, points.topright.y);
+    ctx.lineTo(points.bottomright.x, points.bottomright.y);
+    ctx.lineTo(points.bottomleft.x, points.bottomleft.y);
+    ctx.lineTo(points.topleft.x, points.topleft.y);
+    ctx.lineTo(points.topright.x, points.topright.y);
     ctx.fill();
 
-    const size = pot.width.top * 1.6;
-    const imgy = point.y - pot.height - size;
-    ctx.drawImage(img, point.x - size / 2 + 1, imgy, size, size);
+    const imgy = point.y - pot.height - pot.imgSize;
+    ctx.drawImage(img, point.x - pot.imgSize / 2 + 2, imgy, pot.imgSize, pot.imgSize);
 
     const font = {
         text: pots[currentPot].humidity,
         color: "white",
         family: "Verdana",
-        size: pot.height * 1,
+        size: pot.height,
         x: point.x - pot.width.bottom * 0.85,
         y: point.y + pot.height * 0.2
     }
@@ -288,6 +318,7 @@ const getSemicircleXY = (startPt, endPt, permille) => {
     }
     return ({
         x: Math.floor(X),
+
         y: Math.floor(Y)
     });
 }
