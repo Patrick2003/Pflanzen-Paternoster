@@ -4,13 +4,12 @@ const ctx = paternoster.getContext("2d");
 
 let scalefactor = 0;
 
-if (window.innerHeight * 0.8 < window.innerWidth) {
-    scalefactor = 600 / window.innerHeight;
+const bodymargin = parseInt(window.getComputedStyle(document.body, null).getPropertyValue('margin'), 10);
+if (window.innerHeight / window.innerWidth > 2) {
+    scalefactor = (window.innerWidth - 2 * bodymargin) / 400;
 } else {
-    scalefactor = window.innerWidth / 825;
+    scalefactor = (window.innerHeight - 2 * bodymargin) / 800;
 }
-
-scalefactor = 0.75;
 
 const canvas = {
     xpos: 45,
@@ -46,8 +45,8 @@ paternoster.height = canvas.height;
 paternoster.width = canvas.width;
 
 const length = {
-    vertical: canvas.height - canvas.width - 2 * canvas.pot.height,
-    horizontal: (canvas.width - canvas.pot.width.top) * Math.PI * 0.5,
+    vertical: canvas.height - canvas.ypos - canvas.pot.height - (canvas.width - 2 * canvas.pot.width.top) * 0.5,
+    horizontal: (canvas.width - 2 * canvas.pot.width.top) * Math.PI * 0.5,
     total: undefined
 }
 
@@ -140,7 +139,7 @@ const drawBackground = () => {
 
     const arcr = canvas.width * 0.5 - canvas.pot.width.top;
 
-    ctx.fillStyle = "#666";
+    ctx.fillStyle = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
     ctx.rect(0, 0, paternoster.width, paternoster.height);
     ctx.fill();
 
@@ -180,36 +179,36 @@ const draw = (pos) => {
             x: canvas.xpos,
             y: canvas.ypos + length.vertical
         }, {
-                x: canvas.xpos,
-                y: canvas.ypos
-            }, relPos);
+            x: canvas.xpos,
+            y: canvas.ypos
+        }, relPos);
     } else if (pos < length.vertical + length.horizontal) {
         relPos = (pos - length.vertical) / length.horizontal
         xy = getSemicircleXY({
             x: canvas.xpos,
             y: canvas.ypos
         }, {
-                x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
-                y: canvas.ypos
-            }, relPos);
+            x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
+            y: canvas.ypos
+        }, relPos);
     } else if (pos < length.vertical + length.horizontal + length.vertical) {
         relPos = (pos - length.vertical - length.horizontal) / length.vertical
         xy = getLineXY({
             x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
             y: canvas.ypos
         }, {
-                x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
-                y: canvas.ypos + length.vertical
-            }, relPos);
+            x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
+            y: canvas.ypos + length.vertical
+        }, relPos);
     } else {
         relPos = (pos - length.vertical - length.horizontal - length.vertical) / length.horizontal
         xy = getSemicircleXY({
             x: canvas.xpos + canvas.width - 2 * canvas.pot.width.top,
             y: canvas.ypos + length.vertical
         }, {
-                x: canvas.xpos,
-                y: canvas.ypos + length.vertical
-            }, relPos);
+            x: canvas.xpos,
+            y: canvas.ypos + length.vertical
+        }, relPos);
     }
     drawPot(xy);
 
@@ -344,3 +343,4 @@ paternoster.addEventListener('click', (evt) => {
 
 // start the animation
 animate();
+scalefactor = ($("body").prop("scrollWidth") - 2 * bodymargin) / 400;
