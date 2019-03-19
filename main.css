@@ -1,9 +1,27 @@
 body {
-    background-color: #555;
-    justify-content: center;
+    background-color: #FFF;
+  }
+  
+  .container {
+    display: flex;
+    border: 2px solid green;
+    align-items: stretch;
+    align-content: stretch;
+  }
+  
+  .item {
     text-align: center;
-}
-
-#paternoster {
-
-}
+    border: 2px solid red;
+    flex-grow: 1;
+  }
+  
+  .header {
+    display: flex;
+    flex-flow: row wrap;
+    border: 2px solid blue;
+    justify-content: flex-end;
+  }
+  
+  #title {
+    margin-right: auto;
+  }

@@ -10,13 +10,30 @@
 </head>
 
 <body display="flex">
-    <h1 id="title">
-        Pflanzen Paternoster
-    </h1>
-    <canvas id="paternoster">
-    </canvas>
-    <div>
-        <span id = selected></span>
+
+    <header class="header">
+        <div id="title">
+            Pflanzen Paternoster
+        </div>
+        <div class="buttons">
+            edit
+        </div>
+        <div class="buttons">
+            <span id="datetime"></span>
+        </div>
+        <div class="buttons">
+            GHI
+        </div>
+    </header>
+    <div class="container">
+        <ul class="item">
+            <li>
+                Meow
+            </li>
+        </ul>
+        <canvas class="item" id="paternoster">
+        </canvas>
+        <span class="item" id="selected"></span>
     </div>
     <script src="main.js"></script>
 </body>

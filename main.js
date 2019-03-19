@@ -1,6 +1,9 @@
 const paternoster = document.getElementById("paternoster");
 const info = document.getElementById("selected");
 const ctx = paternoster.getContext("2d");
+const dt = new Date();
+
+document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
 
 let scalefactor = 0;
 
